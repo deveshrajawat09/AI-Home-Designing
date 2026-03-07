@@ -1,0 +1,22 @@
+{
+  "name": "home-designer-pro",
+  "version": "1.0.0",
+  "description": "Full-stack interior design web app with 2D drag/drop builder, 3D preview (React Three Fiber), Tailwind + Framer Motion, Node/Express API, and MongoDB persistence. Deployable to Vercel (client) + Render/Atlas (API) or full-stack to Netlify functions.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build": "npm run build --prefix client",
+    "start": "npm run start --prefix server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1"
+  }
+}
