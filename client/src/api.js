@@ -1,5 +1,27 @@
 import axios from "axios";
 
+const api = axios.create({
+  baseURL: ""
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const login = async (email, password) => {
+  const { data } = await api.post("/api/login", { email, password });
+  return data;
+};
+
+export const signup = async (email, password) => {
+  const { data } = await api.post("/api/signup", { email, password });
+  return data;
+};
+
 export const generatePlan = async (payload) => {
   const { data } = await axios.post("/generate-plan", payload);
   return data.plan;

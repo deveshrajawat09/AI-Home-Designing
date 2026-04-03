@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +17,8 @@ app.use(express.json({ limit: "2mb" }));
 
 const PORT = process.env.PORT || 5001;
 const DATA_PATH = path.join(__dirname, "plans.json");
+const USERS_PATH = path.join(__dirname, "users.json");
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
 const DIST_DIR = path.join(__dirname, "client", "dist");
 
 const genAI =
@@ -39,6 +42,56 @@ const readPlans = async () => {
 };
 
 const writePlans = async (plans) => fs.writeFile(DATA_PATH, JSON.stringify(plans, null, 2));
+
+const ensureUsersFile = async () => {
+  try {
+    await fs.access(USERS_PATH);
+  } catch {
+    await fs.writeFile(USERS_PATH, JSON.stringify([]));
+  }
+};
+
+const readUsers = async () => {
+  await ensureUsersFile();
+  const raw = await fs.readFile(USERS_PATH, "utf-8");
+  return JSON.parse(raw || "[]");
+};
+
+const writeUsers = async (users) => fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2));
+
+app.post("/api/signup", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+  const users = await readUsers();
+  if (users.find(u => u.email === email)) return res.status(400).json({ error: "User already exists" });
+  const user = { id: Date.now().toString(), email, password }; // In production, hash password
+  users.push(user);
+  await writeUsers(users);
+  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+  res.json({ token, user: { id: user.id, email: user.email } });
+});
+
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+  const users = await readUsers();
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+  res.json({ token, user: { id: user.id, email: user.email } });
+});
+
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "No token provided" });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
 
 const fallbackPlan = (len, wid) => {
   const scale = 1;
@@ -107,7 +160,7 @@ const safeParseJSON = (text) => {
   }
 };
 
-app.post("/generate-plan", async (req, res) => {
+app.post("/generate-plan", authenticate, async (req, res) => {
   const { length = 10, width = 15, shape = "rectangle", points = [] } = req.body;
   try {
     let plan;
@@ -126,12 +179,12 @@ app.post("/generate-plan", async (req, res) => {
   }
 });
 
-app.get("/plans", async (_req, res) => {
+app.get("/plans", authenticate, async (_req, res) => {
   const plans = await readPlans();
   res.json({ plans });
 });
 
-app.post("/plans", async (req, res) => {
+app.post("/plans", authenticate, async (req, res) => {
   const { name, plan, land } = req.body;
   if (!name || !plan) return res.status(400).json({ error: "name and plan required" });
   const plans = await readPlans();
@@ -141,7 +194,7 @@ app.post("/plans", async (req, res) => {
   res.json({ saved: record });
 });
 
-app.delete("/plans/:id", async (req, res) => {
+app.delete("/plans/:id", authenticate, async (req, res) => {
   const plans = await readPlans();
   const filtered = plans.filter((p) => p.id !== req.params.id);
   await writePlans(filtered);
@@ -151,7 +204,13 @@ app.delete("/plans/:id", async (req, res) => {
 // Serve built client if present
 app.use(express.static(DIST_DIR));
 app.get("*", (req, res, next) => {
-  if (req.path.startsWith("/generate-plan") || req.path.startsWith("/plans")) return next();
+  if (
+    req.path.startsWith("/generate-plan") ||
+    req.path.startsWith("/plans") ||
+    req.path.startsWith("/api")
+  ) {
+    return next();
+  }
   return res.sendFile(path.join(DIST_DIR, "index.html"), (err) => {
     if (err) next();
   });

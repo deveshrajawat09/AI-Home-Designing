@@ -6,8 +6,9 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/generate-plan": "http://localhost:5000",
-      "/plans": "http://localhost:5000"
+      "/api": "http://localhost:5001",
+      "/generate-plan": "http://localhost:5001",
+      "/plans": "http://localhost:5001"
     }
   },
   build: {
