@@ -23,21 +23,21 @@ export const signup = async (email, password) => {
 };
 
 export const generatePlan = async (payload) => {
-  const { data } = await axios.post("/generate-plan", payload);
+  const { data } = await api.post("/generate-plan", payload);
   return data.plan;
 };
 
 export const listPlans = async () => {
-  const { data } = await axios.get("/plans");
+  const { data } = await api.get("/plans");
   return data.plans;
 };
 
 export const savePlan = async (body) => {
-  const { data } = await axios.post("/plans", body);
+  const { data } = await api.post("/plans", body);
   return data.saved;
 };
 
 export const deletePlan = async (id) => {
-  const { data } = await axios.delete(`/plans/${id}`);
+  const { data } = await api.delete(`/plans/${id}`);
   return data.ok;
 };

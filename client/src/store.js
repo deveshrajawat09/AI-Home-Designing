@@ -5,8 +5,13 @@ export const usePlanStore = create((set) => ({
   loading: false,
   error: null,
   saved: [],
+  user: null,
+  token: null,
   setPlan: (plan) => set({ plan }),
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-  setSaved: (saved) => set({ saved })
+  setSaved: (saved) => set({ saved }),
+  setUser: (user) => set({ user }),
+  setToken: (token) => set({ token }),
+  logout: () => set({ user: null, token: null, plan: null, saved: [] })
 }));
