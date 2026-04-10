@@ -41,7 +41,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950 px-4 hp-auth-bg">
       <div className="max-w-md w-full space-y-8 p-8 md:p-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-lg border border-gray-200/80 dark:border-gray-700">
         <div className="text-center space-y-2">
           <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">HomePlanner AI</p>
@@ -113,7 +113,7 @@ export default function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 dark:focus:ring-offset-gray-900 transition-colors"
+            className="hp-hover-lift w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 dark:focus:ring-offset-gray-900 transition-colors"
           >
             {loading ? "Creating account…" : "Sign up"}
           </button>

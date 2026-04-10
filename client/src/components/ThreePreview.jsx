@@ -61,12 +61,20 @@ export default function ThreePreview({ plan, visible }) {
   if (!visible) return null;
 
   return (
-    <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/60 p-3">
-      <div className="flex items-center justify-between mb-2 text-sm text-gray-600 dark:text-gray-300">
-        <span>3D Preview</span>
-        <span>{ready ? "Interactive" : "LoadingÖ"}</span>
+    <div className="mt-4 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+      <div className="flex items-center justify-between mb-2 text-sm">
+        <span className="text-slate-800">3D Preview</span>
+        <span
+          className={
+            ready
+              ? "text-emerald-600 dark:text-emerald-300 font-medium"
+              : "text-slate-500 dark:text-slate-400 font-medium"
+          }
+        >
+          {ready ? "Interactive" : "Loadingù"}
+        </span>
       </div>
-      <Suspense fallback={<div className="text-gray-500">Loading 3DÖ</div>}>
+      <Suspense fallback={<div className="text-gray-500">Loading 3Dù</div>}>
         <div ref={mountRef} className="w-full h-[320px]" />
       </Suspense>
     </div>

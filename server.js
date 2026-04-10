@@ -5,21 +5,48 @@ import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+app.use(
+  cors({
+    origin: CORS_ORIGIN,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json({ limit: "2mb" }));
+app.use(helmet());
 
 const PORT = process.env.PORT || 5001;
 const DATA_PATH = path.join(__dirname, "plans.json");
 const USERS_PATH = path.join(__dirname, "users.json");
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
 const DIST_DIR = path.join(__dirname, "client", "dist");
+
+const authRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." }
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many login attempts, please try again later." }
+});
 
 const genAI =
   process.env.GOOGLE_API_KEY &&
@@ -59,26 +86,75 @@ const readUsers = async () => {
 
 const writeUsers = async (users) => fs.writeFile(USERS_PATH, JSON.stringify(users, null, 2));
 
-app.post("/api/signup", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
-  const users = await readUsers();
-  if (users.find(u => u.email === email)) return res.status(400).json({ error: "User already exists" });
-  const user = { id: Date.now().toString(), email, password }; // In production, hash password
-  users.push(user);
-  await writeUsers(users);
-  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-  res.json({ token, user: { id: user.id, email: user.email } });
+const getUserRole = (user) => {
+  if (user?.role === "admin") return "admin";
+  // Backward-compatible default for existing seeded admin account.
+  if (user?.email === "admin@example.com") return "admin";
+  return "user";
+};
+
+const publicUser = (user) => ({
+  id: user.id,
+  email: user.email,
+  role: getUserRole(user)
 });
 
-app.post("/api/login", async (req, res) => {
+const inferCreatedAtFromId = (id) => {
+  const ts = Number(id);
+  if (!Number.isFinite(ts) || ts <= 0) return null;
+  const iso = new Date(ts).toISOString();
+  return iso === "Invalid Date" ? null : iso;
+};
+
+app.post("/api/signup", authRateLimiter, async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password required" });
+  }
+  if (String(password).length < 8) {
+    return res.status(400).json({ error: "Password must be at least 8 characters" });
+  }
+  const users = await readUsers();
+  if (users.find(u => u.email === email)) return res.status(400).json({ error: "User already exists" });
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  const user = {
+    id: Date.now().toString(),
+    email,
+    password: passwordHash,
+    role: "user"
+  };
+  users.push(user);
+  await writeUsers(users);
+  const role = getUserRole(user);
+  const token = jwt.sign({ id: user.id, email: user.email, role }, JWT_SECRET);
+  res.json({ token, user: publicUser(user) });
+});
+
+app.post("/api/login", loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Email and password required" });
   const users = await readUsers();
-  const user = users.find(u => u.email === email && u.password === password);
+
+  const user = users.find((u) => u.email === email);
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
-  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-  res.json({ token, user: { id: user.id, email: user.email } });
+
+  const stored = user.password;
+  const looksHashed = typeof stored === "string" && stored.startsWith("$2");
+  const ok = looksHashed ? await bcrypt.compare(password, stored) : stored === password;
+
+  if (!ok) return res.status(401).json({ error: "Invalid credentials" });
+
+  // One-time migration: if old users are stored with plain-text passwords,
+  // re-hash them after successful login.
+  if (!looksHashed) {
+    user.password = await bcrypt.hash(password, 10);
+    await writeUsers(users);
+  }
+
+  const role = getUserRole(user);
+  const token = jwt.sign({ id: user.id, email: user.email, role }, JWT_SECRET);
+  res.json({ token, user: publicUser(user) });
 });
 
 const authenticate = (req, res, next) => {
@@ -91,6 +167,13 @@ const authenticate = (req, res, next) => {
   } catch (err) {
     res.status(401).json({ error: "Invalid token" });
   }
+};
+
+const requireAdmin = (req, res, next) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
 };
 
 const fallbackPlan = (len, wid) => {
@@ -199,6 +282,105 @@ app.delete("/plans/:id", authenticate, async (req, res) => {
   const filtered = plans.filter((p) => p.id !== req.params.id);
   await writePlans(filtered);
   res.json({ ok: true });
+});
+
+app.get("/api/admin/stats", authenticate, requireAdmin, async (_req, res) => {
+  const users = await readUsers();
+  const plans = await readPlans();
+  const totalUsers = users.length;
+  const adminUsers = users.filter((u) => getUserRole(u) === "admin").length;
+  const normalUsers = totalUsers - adminUsers;
+  res.json({
+    stats: {
+      totalUsers,
+      adminUsers,
+      normalUsers,
+      totalPlans: plans.length
+    }
+  });
+});
+
+app.get("/api/admin/users", authenticate, requireAdmin, async (_req, res) => {
+  const users = await readUsers();
+  res.json({ users: users.map(publicUser) });
+});
+
+app.patch("/api/admin/users/:id/role", authenticate, requireAdmin, async (req, res) => {
+  const { role } = req.body;
+  if (!["admin", "user"].includes(role)) {
+    return res.status(400).json({ error: "Role must be admin or user" });
+  }
+
+  const users = await readUsers();
+  const idx = users.findIndex((u) => u.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: "User not found" });
+
+  const target = users[idx];
+  const targetCurrentRole = getUserRole(target);
+  if (targetCurrentRole === role) {
+    return res.json({ user: publicUser({ ...target, role }) });
+  }
+
+  // Prevent last-admin lockout.
+  if (targetCurrentRole === "admin" && role !== "admin") {
+    const adminCount = users.filter((u) => getUserRole(u) === "admin").length;
+    if (adminCount <= 1) {
+      return res.status(400).json({ error: "Cannot remove role from the last admin" });
+    }
+  }
+
+  users[idx] = { ...target, role };
+  await writeUsers(users);
+  return res.json({ user: publicUser(users[idx]) });
+});
+
+app.delete("/api/admin/users/:id", authenticate, requireAdmin, async (req, res) => {
+  const users = await readUsers();
+  const target = users.find((u) => u.id === req.params.id);
+  if (!target) return res.status(404).json({ error: "User not found" });
+
+  if (target.id === req.user.id) {
+    return res.status(400).json({ error: "You cannot delete your own account" });
+  }
+
+  const targetRole = getUserRole(target);
+  if (targetRole === "admin") {
+    const adminCount = users.filter((u) => getUserRole(u) === "admin").length;
+    if (adminCount <= 1) {
+      return res.status(400).json({ error: "Cannot delete the last admin" });
+    }
+  }
+
+  const filtered = users.filter((u) => u.id !== req.params.id);
+  await writeUsers(filtered);
+  return res.json({ ok: true });
+});
+
+app.get("/api/admin/activity", authenticate, requireAdmin, async (_req, res) => {
+  const users = await readUsers();
+  const plans = await readPlans();
+
+  const userEvents = users
+    .map((u) => ({
+      type: "user",
+      message: `User account: ${u.email}`,
+      at: inferCreatedAtFromId(u.id)
+    }))
+    .filter((e) => e.at);
+
+  const planEvents = plans
+    .map((p) => ({
+      type: "plan",
+      message: `Plan saved: ${p.name || "Untitled"}`,
+      at: p.savedAt || null
+    }))
+    .filter((e) => e.at);
+
+  const recent = [...planEvents, ...userEvents]
+    .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+    .slice(0, 8);
+
+  res.json({ recent });
 });
 
 // Serve built client if present

@@ -41,3 +41,28 @@ export const deletePlan = async (id) => {
   const { data } = await api.delete(`/plans/${id}`);
   return data.ok;
 };
+
+export const getAdminStats = async () => {
+  const { data } = await api.get("/api/admin/stats");
+  return data.stats;
+};
+
+export const getAdminUsers = async () => {
+  const { data } = await api.get("/api/admin/users");
+  return data.users;
+};
+
+export const updateUserRole = async (id, role) => {
+  const { data } = await api.patch(`/api/admin/users/${id}/role`, { role });
+  return data.user;
+};
+
+export const deleteUserByAdmin = async (id) => {
+  const { data } = await api.delete(`/api/admin/users/${id}`);
+  return data.ok;
+};
+
+export const getAdminActivity = async () => {
+  const { data } = await api.get("/api/admin/activity");
+  return data.recent;
+};
