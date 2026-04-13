@@ -29,6 +29,13 @@ export const initCanvas = (canvasEl, width, height) => {
   });
   canvas.setWidth(width);
   canvas.setHeight(height);
+  // Force white background on Fabric's own wrapper div
+  if (canvas.wrapperEl) {
+    canvas.wrapperEl.style.background = '#ffffff';
+  }
+  if (canvas.lowerCanvasEl) {
+    canvas.lowerCanvasEl.style.background = '#ffffff';
+  }
   return canvas;
 };
 

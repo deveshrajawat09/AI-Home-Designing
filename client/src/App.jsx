@@ -38,7 +38,7 @@ function PlannerView() {
 
   useEffect(() => {
     if (user && token) {
-      listPlans().then(setSaved).catch(() => {});
+      listPlans().then(setSaved).catch(() => { });
     }
   }, [setSaved, user, token]);
 
@@ -140,9 +140,8 @@ function PlannerView() {
               <span>Dark</span>
               <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-gray-200 border border-gray-300">
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                    dark ? "translate-x-4" : "translate-x-1"
-                  }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${dark ? "translate-x-4" : "translate-x-1"
+                    }`}
                 />
                 <input
                   className="sr-only"
@@ -173,13 +172,15 @@ function PlannerView() {
                 </span>
               </div>
             </div>
-            <div className="grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-0 lg:gap-4 p-3 lg:p-4">
-              <div className="rounded-xl bg-white border border-gray-200 overflow-hidden">
+            <div className={`grid gap-0 lg:gap-4 p-3 lg:p-4 ${show3d ? "lg:grid-cols-2 lg:min-h-[500px]" : "lg:grid-cols-1"}`}>
+              <div className="rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm lg:h-full">
                 <CanvasView plan={plan} editable={editable} land={land} />
               </div>
-              <div className="mt-3 lg:mt-0 rounded-xl bg-white border border-gray-200 min-h-[180px] flex items-center justify-center">
-                <ThreePreview plan={plan} visible={show3d} />
-              </div>
+              {show3d && (
+                <div className="mt-3 lg:mt-0 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 min-h-[500px] flex items-center justify-center overflow-hidden shadow-sm lg:h-full">
+                  <ThreePreview plan={plan} visible={show3d} />
+                </div>
+              )}
             </div>
           </div>
 

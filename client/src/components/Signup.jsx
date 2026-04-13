@@ -20,7 +20,6 @@ export default function Signup() {
       setError("Passwords do not match");
       return;
     }
-
     if (password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
@@ -41,90 +40,109 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950 px-4 hp-auth-bg">
-      <div className="max-w-md w-full space-y-8 p-8 md:p-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-lg border border-gray-200/80 dark:border-gray-700">
-        <div className="text-center space-y-2">
-          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">HomePlanner AI</p>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Create account</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Sign up to save and generate floor plans</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center hp-auth-bg px-4 py-12">
+      {/* Background decorative blobs */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-teal-400/10 blur-3xl" />
+      </div>
 
-        <form className="mt-2 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+      <div className="relative w-full max-w-md hp-fade-in">
+        {/* Card */}
+        <div className="hp-glass rounded-2xl p-8 sm:p-10">
+          {/* Logo */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 mb-4">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-emerald-600 dark:text-emerald-400 mb-1">HomePlanner AI</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create account</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Start designing for free</p>
+          </div>
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Email
+              <label htmlFor="signup-email" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                Email address
               </label>
               <input
-                id="email"
+                id="signup-email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm dark:bg-gray-900 dark:text-white"
+                className="hp-input"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="signup-password" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                 Password
               </label>
               <input
-                id="password"
+                id="signup-password"
                 name="password"
                 type="password"
                 autoComplete="new-password"
                 required
-                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm dark:bg-gray-900 dark:text-white"
+                className="hp-input"
                 placeholder="At least 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
+              <label htmlFor="signup-confirm" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                 Confirm password
               </label>
               <input
-                id="confirmPassword"
+                id="signup-confirm"
                 name="confirmPassword"
                 type="password"
                 autoComplete="new-password"
                 required
-                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm dark:bg-gray-900 dark:text-white"
+                className="hp-input"
                 placeholder="Repeat password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-          </div>
 
-          {error && (
-            <div className="rounded-lg bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-sm px-3 py-2 text-center">
-              {error}
-            </div>
-          )}
+            {error && (
+              <div className="rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 px-4 py-3 text-sm text-rose-700 dark:text-rose-300 text-center hp-fade-in">
+                {error}
+              </div>
+            )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="hp-hover-lift w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 dark:focus:ring-offset-gray-900 transition-colors"
-          >
-            {loading ? "Creating account…" : "Sign up"}
-          </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="hp-hover-lift w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-55 shadow-lg shadow-emerald-500/25 transition-all mt-2"
+            >
+              {loading ? (
+                <><span className="hp-spinner" style={{ borderTopColor: "#a7f3d0" }} /> Creating account…</>
+              ) : "Create account →"}
+            </button>
 
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Already registered?{" "}
-            <Link to="/login" className="font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400">
-              Sign in
-            </Link>
-          </p>
-        </form>
+            <p className="text-center text-sm text-slate-500 dark:text-slate-400 pt-1">
+              Already registered?{" "}
+              <Link to="/login" className="font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        <p className="text-center text-[11px] text-slate-400 dark:text-slate-600 mt-5">
+          Free forever · No credit card required
+        </p>
       </div>
     </div>
   );

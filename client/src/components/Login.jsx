@@ -29,71 +29,93 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 px-4 hp-auth-bg">
-      <div className="max-w-md w-full space-y-8 p-8 md:p-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-lg border border-gray-200/80 dark:border-gray-700">
-        <div className="text-center space-y-2">
-          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">HomePlanner AI</p>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Sign in</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Use your email and password to continue</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center hp-auth-bg px-4 py-12">
+      {/* Background decorative blobs */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-indigo-400/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-violet-400/10 blur-3xl" />
+      </div>
 
-        <form className="mt-2 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+      <div className="relative w-full max-w-md hp-fade-in">
+        {/* Card */}
+        <div className="hp-glass rounded-2xl p-8 sm:p-10">
+          {/* Logo */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 mb-4">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+                <polyline points="9 21 9 12 15 12 15 21"/>
+              </svg>
+            </div>
+            <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-indigo-500 mb-1">HomePlanner AI</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Sign in to your account</p>
+          </div>
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Email
+              <label htmlFor="login-email" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
+                Email address
               </label>
               <input
-                id="email"
+                id="login-email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-900 dark:text-white"
+                className="hp-input"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="login-password" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wide">
                 Password
               </label>
               <input
-                id="password"
+                id="login-password"
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 required
-                className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-900 dark:text-white"
+                className="hp-input"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-          </div>
 
-          {error && (
-            <div className="rounded-lg bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-sm px-3 py-2 text-center">
-              {error}
-            </div>
-          )}
+            {error && (
+              <div className="rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 px-4 py-3 text-sm text-rose-700 dark:text-rose-300 text-center hp-fade-in">
+                {error}
+              </div>
+            )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="hp-hover-lift w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:focus:ring-offset-gray-900 transition-colors"
-          >
-            {loading ? "Signing in…" : "Sign in"}
-          </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="hp-hover-lift w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-55 shadow-lg shadow-indigo-500/25 transition-all mt-2"
+            >
+              {loading ? (
+                <><span className="hp-spinner" /> Signing in…</>
+              ) : "Sign in →"}
+            </button>
 
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            No account?{" "}
-            <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
-              Create one
-            </Link>
-          </p>
-        </form>
+            <p className="text-center text-sm text-slate-500 dark:text-slate-400 pt-1">
+              No account?{" "}
+              <Link to="/signup" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
+                Create one free
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        {/* Bottom hint */}
+        <p className="text-center text-[11px] text-slate-400 dark:text-slate-600 mt-5">
+          Secure login · Your designs stay private
+        </p>
       </div>
     </div>
   );
