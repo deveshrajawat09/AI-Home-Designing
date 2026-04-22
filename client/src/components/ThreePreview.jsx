@@ -16,7 +16,7 @@ export default function ThreePreview({ plan, visible }) {
     
     // Add grid background visually consistent with dark mode support
     const isDark = document.documentElement.classList.contains("dark");
-    scene.background = new THREE.Color(isDark ? "#0f172a" : "#f8fafc");
+    scene.background = new THREE.Color(isDark ? "#0f172a" : "#7eaedf");
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     // Move camera out a bit more to accommodate larger view
@@ -51,7 +51,7 @@ export default function ThreePreview({ plan, visible }) {
     plan.rooms.forEach((r) => {
       const geometry = new THREE.BoxGeometry(r.width, 2.6, r.height);
       const material = new THREE.MeshStandardMaterial({
-        color: r.color || "#cbd5e1",
+        color: r.color || "#acb9c8",
         opacity: 0.95,
         transparent: true,
         roughness: 0.4,
@@ -64,8 +64,8 @@ export default function ThreePreview({ plan, visible }) {
       scene.add(mesh);
     });
 
-    const gridColor = isDark ? "#334155" : "#cbd5e1";
-    const centerGridColor = isDark ? "#475569" : "#94a3b8";
+    const gridColor = isDark ? "#fbfcff" : "#7a899c";
+    const centerGridColor = isDark ? "#a1afc3" : "#94a3b8";
     const grid = new THREE.GridHelper(40, 20, centerGridColor, gridColor);
     scene.add(grid);
 

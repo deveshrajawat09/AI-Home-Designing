@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1776074177652",
+    "email": "deveshthakur340@gmail.com",
+    "password": "$2a$10$7rdGlT1FfcjEE6VMXTghm.O2MgctfXbGZHpzNQva10Brs9s2wfOZm",
+    "role": "user"
+  },
+  {
+    "id": "1776156793395",
+    "email": "deveshrajawat87@gmail.com",
+    "password": "$2a$10$MP4lLXsJ021..7lIZAVmwOcx7ESljTMpW51.Q21WaMNSbE9T04Nl2",
+    "role": "user"
+  },
+  {
+    "id": "1776757579278",
+    "email": "kuldeepdaksh184@gmail.com",
+    "password": "$2a$10$zek9YL4iWY8hbMvhNBGgO.M.u5lWOy2OVTymO13g8KtBiY9z/eazi",
+    "role": "user"
+  },
+  {
+    "id": "1776765805834",
+    "email": "dev76@gmail.com",
+    "password": "$2a$10$tN1G3ELS8fb9PCpmQd7Ydul.AJYNhX5hWvGk8fv8RbII7VnB3BhQO",
+    "role": "user"
+  },
+  {
+    "id": "1776765933041",
+    "email": "test@example.com",
+    "password": "$2a$10$rl1IYjjtn5.7iDVsH8Lh5uneV5LVm8ZueE2tMuFxUbSJt5PyZ4nYe",
+    "role": "user"
+  },
+  {
+    "id": "1776766412853",
+    "email": "tes85t@example.com",
+    "password": "$2a$10$TqsOxFSkHocdFRiwBL7P4.TKTue87hZ.iXOYY1W4j4CZTpiCzhz0G",
+    "role": "user"
+  }
+]

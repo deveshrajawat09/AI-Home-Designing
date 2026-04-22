@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -100,8 +101,8 @@ button:disabled {
 /* ─── Glass card ────────────────────────────────────── */
 .hp-glass {
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.55);
   box-shadow: 0 4px 24px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.05);
 }
@@ -303,5 +304,239 @@ button:disabled {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* ─── Button styles ─────────────────────────────────── */
+  .hp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 150ms ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+
+  .hp-btn-primary {
+    background: #6366f1;
+    color: #ffffff;
+  }
+
+  .hp-btn-primary:hover:not(:disabled) {
+    background: #5855eb;
+  }
+
+  .hp-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+  }
+
+  .hp-btn-secondary:hover:not(:disabled) {
+    background: #e2e8f0;
+  }
+
+  .dark .hp-btn-secondary {
+    background: #1e293b;
+    color: #cbd5e1;
+  }
+
+  .dark .hp-btn-secondary:hover:not(:disabled) {
+    background: #334155;
+  }
+
+  /* ─── Tooltip ───────────────────────────────────────── */
+  .hp-tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .hp-tooltip .hp-tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #0f172a;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.75rem;
+  }
+
+  .hp-tooltip:hover .hp-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .dark .hp-tooltip .hp-tooltip-text {
+    background-color: #f1f5f9;
+    color: #0f172a;
+  }
+
+  /* ─── Modal ─────────────────────────────────────────── */
+  .hp-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .hp-modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .dark .hp-modal-content {
+    background: #1e293b;
+    color: #f1f5f9;
+  }
+
+  /* ─── Canvas styles ─────────────────────────────────── */
+  .hp-canvas {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  .dark .hp-canvas {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: #0f172a;
+  }
+
+  /* ─── Toolbar ───────────────────────────────────────── */
+  .hp-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .dark .hp-toolbar {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hp-toolbar-btn {
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+
+  .hp-toolbar-btn:hover {
+    background: #e2e8f0;
+  }
+
+  .dark .hp-toolbar-btn:hover {
+    background: #334155;
+  }
+
+  /* ─── Notification ──────────────────────────────────── */
+  .hp-notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: #10b981;
+    color: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    max-width: 300px;
+  }
+
+  .hp-notification.error {
+    background: #ef4444;
+  }
+
+  .hp-notification.warning {
+    background: #f59e0b;
+  }
+
+  /* ─── Loading overlay ───────────────────────────────── */
+  .hp-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .dark .hp-loading-overlay {
+    background: rgba(15, 23, 42, 0.8);
+  }
+
+  /* ─── Accordion ─────────────────────────────────────── */
+  .hp-accordion {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .dark .hp-accordion {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hp-accordion-item {
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .hp-accordion-item:last-child {
+    border-bottom: none;
+  }
+
+  .dark .hp-accordion-item {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .hp-accordion-header {
+    padding: 1rem;
+    background: #f8fafc;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dark .hp-accordion-header {
+    background: #1e293b;
+  }
+
+  .hp-accordion-content {
+    padding: 1rem;
+    background: #ffffff;
+  }
+
+  .dark .hp-accordion-content {
+    background: #0f172a;
   }
 }

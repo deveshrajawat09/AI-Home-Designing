@@ -51,7 +51,7 @@ const loginLimiter = rateLimit({
 const genAI =
   process.env.GOOGLE_API_KEY &&
   new GoogleGenerativeAI(process.env.GOOGLE_API_KEY).getGenerativeModel({
-    model: "gemini-1.0-pro"
+    model: "gemini-1.5-flash"
   });
 
 const ensureDataFile = async () => {
@@ -248,10 +248,16 @@ app.post("/generate-plan", authenticate, async (req, res) => {
   try {
     let plan;
     if (genAI) {
-      const prompt = buildPrompt({ length, width, shape, points });
-      const result = await genAI.generateContent(prompt);
-      const txt = result.response.text().trim();
-      plan = safeParseJSON(txt);
+      try {
+        const prompt = buildPrompt({ length, width, shape, points });
+        const result = await genAI.generateContent(prompt);
+        const txt = result.response.text().trim();
+        plan = safeParseJSON(txt);
+      } catch (aiErr) {
+        console.warn("AI generation failed, using fallback:", aiErr.message);
+        // Fallback to hardcoded plan on quota/API error
+        plan = fallbackPlan(length, width);
+      }
     } else {
       plan = fallbackPlan(length, width);
     }

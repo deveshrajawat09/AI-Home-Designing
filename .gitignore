@@ -1,1 +1,71 @@
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
 node_modules
+/.pnp
+.pnp.js
+
+# Build outputs
+dist
+build
+out
+*.tgz
+*.tar.gz
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Testing
+coverage
+.nyc_output
+.jest-cache
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Database backups
+*.backup
+*.bak
+
+# Development
+.hot-update.json*
+.cache-loader
+*.pid
+
+# Backup files
+*.bak
+*.backup
+App.jsx.bak
+

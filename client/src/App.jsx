@@ -96,38 +96,38 @@ function PlannerView() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 relative">
-      <header className="relative z-10 border-b border-gray-200 bg-white/85 backdrop-blur">
+    <div className="min-h-screen bg-stone-50 text-stone-900 relative">
+      <header className="relative z-10 border-b border-stone-200 bg-white/85 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-teal-600 flex items-center justify-center shadow-sm">
               <span className="text-xs font-semibold tracking-tight text-white">HP</span>
             </div>
             <div>
               <h1 className="text-lg font-semibold leading-tight">HomePlanner AI</h1>
-              <p className="text-[11px] text-gray-500">Floor & 3D generator</p>
+              <p className="text-[11px] text-stone-500">Floor & 3D generator</p>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-1 ml-6 text-xs rounded-full border border-gray-200 bg-gray-100 px-1 py-1">
-            <span className="px-3 py-1 rounded-full bg-indigo-600 text-white shadow-sm">Design</span>
-            <span className="px-3 py-1 rounded-full text-gray-600 cursor-default">Saved plans</span>
+          <div className="hidden md:flex items-center gap-1 ml-6 text-xs rounded-full border border-stone-200 bg-stone-100 px-1 py-1">
+            <span className="px-3 py-1 rounded-full bg-teal-600 text-white shadow-sm">Design</span>
+            <span className="px-3 py-1 rounded-full text-stone-600 cursor-default">Saved plans</span>
           </div>
 
           <div className="ml-auto flex items-center gap-3 text-xs md:text-sm">
             <div className="hidden sm:flex flex-col items-end leading-tight">
-              <span className="text-gray-900 font-medium">{user?.email}</span>
-              <span className="text-[11px] text-gray-500">Signed in as {user?.role || "user"}</span>
+              <span className="text-stone-900 font-medium">{user?.email}</span>
+              <span className="text-[11px] text-stone-500">Signed in as {user?.role || "user"}</span>
             </div>
             {user?.role === "admin" && (
               <Link
                 to="/admin"
-                className="px-3 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-500 shadow-sm"
+                className="px-3 py-1.5 rounded-xl bg-teal-600 text-white text-xs font-medium hover:bg-teal-500 shadow-sm"
               >
                 Admin Panel
               </Link>
             )}
-            <div className="h-8 w-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-[11px] font-semibold text-indigo-700">
+            <div className="h-8 w-8 rounded-full bg-teal-100 border border-teal-200 flex items-center justify-center text-[11px] font-semibold text-teal-700">
               {user?.email?.[0]?.toUpperCase() || "U"}
             </div>
             <button
@@ -136,9 +136,9 @@ function PlannerView() {
             >
               Logout
             </button>
-            <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-gray-700">
+            <label className="flex items-center gap-1.5 cursor-pointer text-[11px] text-stone-700">
               <span>Dark</span>
-              <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-gray-200 border border-gray-300">
+              <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-stone-200 border border-stone-300">
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${dark ? "translate-x-4" : "translate-x-1"
                     }`}
@@ -157,23 +157,23 @@ function PlannerView() {
 
       <main className="max-w-6xl mx-auto px-4 pb-10 pt-4 space-y-6">
         <section className="grid md:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)] gap-4 md:gap-6 items-start">
-          <div className="md:col-span-1 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-indigo-50 via-transparent to-emerald-50">
+          <div className="md:col-span-1 rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100 bg-gradient-to-r from-teal-50 via-transparent to-emerald-50">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Canvas</p>
-                <p className="text-sm text-gray-900">Draw & preview your layout</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-stone-500">Canvas</p>
+                <p className="text-sm text-stone-900">Draw & preview your layout</p>
               </div>
               <div className="flex gap-2 text-[11px]">
-                <span className="px-2 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-700">
+                <span className="px-2 py-1 rounded-full bg-stone-100 border border-stone-200 text-stone-700">
                   {editable ? "Edit mode" : "Locked"}
                 </span>
-                <span className="px-2 py-1 rounded-full bg-gray-100 border border-gray-200 text-gray-700">
+                <span className="px-2 py-1 rounded-full bg-stone-100 border border-stone-200 text-stone-700">
                   {show3d ? "3D on" : "2D view"}
                 </span>
               </div>
             </div>
             <div className={`grid gap-0 lg:gap-4 p-3 lg:p-4 ${show3d ? "lg:grid-cols-2 lg:min-h-[500px]" : "lg:grid-cols-1"}`}>
-              <div className="rounded-xl bg-white border border-gray-200 overflow-hidden shadow-sm lg:h-full">
+              <div className="rounded-xl bg-white border border-stone-200 overflow-hidden shadow-sm lg:h-full">
                 <CanvasView plan={plan} editable={editable} land={land} />
               </div>
               {show3d && (
@@ -185,14 +185,14 @@ function PlannerView() {
           </div>
 
           <aside className="space-y-4 md:space-y-5">
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-              <h3 className="font-semibold mb-1 text-gray-900 flex items-center justify-between">
+            <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
+              <h3 className="font-semibold mb-1 text-stone-900 flex items-center justify-between">
                 Measurements
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 border border-gray-200 text-gray-700">
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700">
                   Plot {land.length}m × {land.width}m
                 </span>
               </h3>
-              <p className="text-xs text-gray-600 mb-3">
+              <p className="text-xs text-stone-600 mb-3">
                 Define your land size and shape. Use irregular mode for custom plots.
               </p>
               <div className="space-y-3 text-sm">
@@ -201,7 +201,7 @@ function PlannerView() {
                   <input
                     type="number"
                     min="5"
-                    className="mt-1 rounded-lg border border-gray-300 px-2 py-1 bg-white"
+                    className="mt-1 rounded-lg border border-stone-300 px-2 py-1 bg-white"
                     value={land.length}
                     onChange={(e) => setLand({ ...land, length: Number(e.target.value) })}
                   />
@@ -211,7 +211,7 @@ function PlannerView() {
                   <input
                     type="number"
                     min="5"
-                    className="mt-1 rounded-lg border border-gray-300 px-2 py-1 bg-white"
+                    className="mt-1 rounded-lg border border-stone-300 px-2 py-1 bg-white"
                     value={land.width}
                     onChange={(e) => setLand({ ...land, width: Number(e.target.value) })}
                   />
@@ -219,7 +219,7 @@ function PlannerView() {
                 <label className="flex flex-col">
                   Shape
                   <select
-                    className="mt-1 rounded-lg border border-gray-300 px-2 py-1 bg-white"
+                    className="mt-1 rounded-lg border border-stone-300 px-2 py-1 bg-white"
                     value={land.shape}
                     onChange={(e) => setLand({ ...land, shape: e.target.value })}
                   >
@@ -232,18 +232,18 @@ function PlannerView() {
                   <label className="flex flex-col text-xs gap-1">
                     Polygon points (x,y;...)
                     <textarea
-                      className="rounded-lg border border-gray-300 px-2 py-1 bg-white"
+                      className="rounded-lg border border-stone-300 px-2 py-1 bg-white"
                       placeholder="0,0;10,0;10,15;0,15"
                       value={land.pointsText}
                       onChange={(e) => setLand({ ...land, pointsText: e.target.value })}
                     />
-                    <span className="text-gray-500">Meters, separated by semicolons.</span>
+                    <span className="text-stone-500">Meters, separated by semicolons.</span>
                   </label>
                 )}
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <button
                     onClick={handleGenerate}
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed hp-hover-lift"
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-teal-600 text-white text-sm font-medium hover:bg-teal-500 disabled:opacity-60 disabled:cursor-not-allowed hp-hover-lift"
                     disabled={loading}
                   >
                     {loading ? <span className="hp-spinner" /> : <span className="inline-block h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />}
@@ -251,7 +251,7 @@ function PlannerView() {
                   </button>
                   <button
                     onClick={loadSample}
-                    className="inline-flex items-center justify-center py-2 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm hover:bg-gray-50 hp-hover-lift"
+                    className="inline-flex items-center justify-center py-2 rounded-xl border border-stone-200 bg-white text-stone-800 text-sm hover:bg-stone-50 hp-hover-lift"
                   >
                     Use sample 10×15
                   </button>
@@ -260,8 +260,8 @@ function PlannerView() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-              <h3 className="font-semibold mb-2 text-gray-900">Edit & view</h3>
+            <div className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm">
+              <h3 className="font-semibold mb-2 text-stone-900">Edit & view</h3>
               <div className="flex items-center justify-between text-sm mb-2">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={editable} onChange={() => setEditable((v) => !v)} />
@@ -276,11 +276,11 @@ function PlannerView() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 space-y-3 shadow-sm">
-              <h3 className="font-semibold text-gray-900">Save & load</h3>
+            <div className="rounded-2xl border border-stone-200 bg-white p-4 space-y-3 shadow-sm">
+              <h3 className="font-semibold text-stone-900">Save & load</h3>
               <div className="flex gap-2 text-sm">
                 <input
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 bg-white text-sm"
+                  className="flex-1 rounded-xl border border-stone-300 px-3 py-2 bg-white text-sm"
                   placeholder="Plan name"
                   value={saveName}
                   onChange={(e) => setSaveName(e.target.value)}
@@ -294,11 +294,11 @@ function PlannerView() {
                 </button>
               </div>
               <div className="space-y-2 max-h-40 overflow-auto text-sm">
-                {saved.length === 0 && <p className="text-gray-500 text-xs">No saved layouts yet.</p>}
+                {saved.length === 0 && <p className="text-stone-500 text-xs">No saved layouts yet.</p>}
                 {saved.map((rec) => (
-                  <div key={rec.id} className="flex items-center gap-2 rounded-xl bg-gray-50 px-3 py-2 border border-gray-200">
+                  <div key={rec.id} className="flex items-center gap-2 rounded-xl bg-stone-50 px-3 py-2 border border-stone-200">
                     <button
-                      className="flex-1 text-left underline"
+                      className="flex-1 text-left underline text-stone-800"
                       onClick={() => handleLoad(rec)}
                     >
                       {rec.name}
@@ -317,7 +317,7 @@ function PlannerView() {
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
               <h3 className="font-semibold mb-1 text-emerald-800">Cost estimate</h3>
               <p className="text-xs text-emerald-800/70 mb-1">Quick rough build budget</p>
-              <p className="text-sm text-gray-800">Area: {area} m²</p>
+              <p className="text-sm text-stone-800">Area: {area} m²</p>
               <p className="text-2xl font-semibold text-emerald-700 mt-1">~ ${cost.toLocaleString()}</p>
               <p className="text-[11px] text-emerald-800/60 mt-1">Assuming $1000 per m² • For reference only</p>
             </div>
@@ -346,8 +346,8 @@ export default function App() {
 
   if (!hydrated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <p className="text-gray-500 dark:text-gray-400 text-sm">Loading…</p>
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-900">
+        <p className="text-stone-500 dark:text-stone-400 text-sm">Loading…</p>
       </div>
     );
   }
