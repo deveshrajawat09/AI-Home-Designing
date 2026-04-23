@@ -10,7 +10,7 @@ export default function ThreePreview({ plan, visible }) {
     const width = mountRef.current.clientWidth;
     const height = 320;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#f8fafc");
+    scene.background = new THREE.Color("#78a9d9");
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(10, 18, 18);
 
@@ -27,7 +27,7 @@ export default function ThreePreview({ plan, visible }) {
     plan.rooms.forEach((r) => {
       const geometry = new THREE.BoxGeometry(r.width, 2.6, r.height);
       const material = new THREE.MeshStandardMaterial({
-        color: r.color || "#cbd5e1",
+        color: r.color || "#95b6df",
         opacity: 0.9,
         transparent: true
       });
@@ -64,9 +64,9 @@ export default function ThreePreview({ plan, visible }) {
     <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/60 p-3">
       <div className="flex items-center justify-between mb-2 text-sm text-gray-600 dark:text-gray-300">
         <span>3D Preview</span>
-        <span>{ready ? "Interactive" : "Loading…"}</span>
+        <span>{ready ? "Interactive" : "Loadingï¿½"}</span>
       </div>
-      <Suspense fallback={<div className="text-gray-500">Loading 3D…</div>}>
+      <Suspense fallback={<div className="text-gray-500">Loading 3Dï¿½</div>}>
         <div ref={mountRef} className="w-full h-[320px]" />
       </Suspense>
     </div>

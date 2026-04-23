@@ -117,7 +117,7 @@ app.post("/api/signup", authLimiter, async (req, res) => {
     });
     res.status(201).json({ token, user: { id: user.id, email: user.email } });
   } catch (err) {
-    console.error("[signup]", err.message);
+    console.error("[signup] Error:", err);
     res.status(500).json({ error: "Signup failed. Please try again." });
   }
 });
@@ -156,7 +156,7 @@ app.post("/api/login", authLimiter, async (req, res) => {
     });
     res.json({ token, user: { id: user.id, email: user.email } });
   } catch (err) {
-    console.error("[login]", err.message);
+    console.error("[login] Error:", err);
     res.status(500).json({ error: "Login failed. Please try again." });
   }
 });

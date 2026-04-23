@@ -71,3 +71,42 @@ textarea:focus-visible {
   outline: 2px solid rgba(99, 102, 241, 0.6);
   outline-offset: 1px;
 }
+
+/* ── Button Hover & Active Effects ───────────────── */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* ── Input Field Enhancements ────────────────────── */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+/* ── Loading Spinner Animation ───────────────────── */
+@keyframes spin-smooth {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-smooth {
+  animation: spin-smooth 1s linear infinite;
+}
+
+/* ── Pulse for Error Messages ────────────────────── */
+@keyframes error-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-error-pulse {
+  animation: error-pulse 1.5s ease-in-out infinite;
+}

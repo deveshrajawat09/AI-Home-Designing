@@ -191,7 +191,7 @@ function PlannerView() {
             </div>
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium hover:bg-rose-500 hover:text-white transition-all"
+              className="px-3 py-1.5 rounded-full bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/50 hover:border-rose-500/80 text-rose-300 hover:text-rose-100 text-xs font-medium transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-rose-500/50"
             >
               Logout
             </button>
@@ -319,7 +319,7 @@ function PlannerView() {
                   <div className="grid grid-cols-2 gap-2 pt-1">
                     <button
                       onClick={() => handleGenerate()}
-                      className="inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-400 shadow-md shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed transition-all active:scale-95"
+                      className="inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white text-sm font-semibold hover:from-indigo-600 hover:to-indigo-700 shadow-lg shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed transition-all active:scale-95 focus:ring-2 focus:ring-indigo-400"
                       disabled={loading}
                     >
                       <span className={`inline-block h-2 w-2 rounded-full ${loading ? "bg-yellow-300 animate-ping" : "bg-emerald-300 animate-pulse"}`} />
@@ -328,7 +328,8 @@ function PlannerView() {
                     <button
                       onClick={loadSample}
                       disabled={loading}
-                      className="inline-flex items-center justify-center py-2.5 rounded-xl border border-slate-700 bg-slate-900/60 text-slate-100 text-sm hover:bg-slate-800 disabled:opacity-60 transition-all active:scale-95"
+                      className="inline-flex items-center justify-center py-2.5 rounded-xl border-2 border-slate-600 hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 text-slate-100 text-sm font-semibold hover:text-white shadow-md hover:shadow-lg disabled:opacity-60 transition-all active:scale-95 focus:ring-2 focus:ring-slate-400"
+                      disabled={loading}
                     >
                       Sample 10×15
                     </button>
@@ -365,7 +366,7 @@ function PlannerView() {
                 <h3 className="font-semibold text-slate-50">💾 Save Plan</h3>
                 <div className="flex gap-2">
                   <input
-                    className="flex-1 rounded-xl border border-slate-700 px-3 py-2 bg-slate-900/80 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="flex-1 rounded-xl border-2 border-slate-600 px-3 py-2 bg-slate-900/80 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all hover:border-slate-500"
                     placeholder="Plan name…"
                     value={saveName}
                     onChange={(e) => setSaveName(e.target.value)}
@@ -373,7 +374,7 @@ function PlannerView() {
                   <button
                     onClick={handleSave}
                     disabled={!plan}
-                    className="px-4 rounded-xl bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed shadow-md shadow-emerald-500/30 transition-all active:scale-95"
+                    className="px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold disabled:from-gray-500 disabled:to-gray-600 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 hover:shadow-xl transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-400"
                   >
                     Save
                   </button>
@@ -410,8 +411,8 @@ function PlannerView() {
                 <p className="text-4xl mb-3">🏠</p>
                 <p className="text-slate-300 font-medium">No saved plans yet</p>
                 <p className="text-slate-500 text-sm mt-1">Generate and save a floor plan to see it here.</p>
-                <button onClick={() => setActiveTab("design")} className="mt-4 px-5 py-2 rounded-xl bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-400 transition-all">
-                  Start Designing
+                <button onClick={() => setActiveTab("design")} className="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white text-sm font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-indigo-400">
+                  🚀 Start Designing
                 </button>
               </div>
             ) : (
@@ -445,13 +446,13 @@ function PlannerView() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleLoad(rec)}
-                        className="flex-1 py-2 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-medium hover:bg-indigo-500 hover:text-white hover:border-indigo-500 transition-all"
+                        className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500/20 to-indigo-600/20 border-2 border-indigo-500/30 hover:border-indigo-500/60 text-indigo-300 hover:text-indigo-100 text-xs font-semibold hover:from-indigo-500/40 hover:to-indigo-600/40 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-indigo-400"
                       >
-                        Load Plan
+                        📁 Load
                       </button>
                       <button
                         onClick={() => handleDelete(rec.id, rec.name)}
-                        className="px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs hover:bg-rose-500 hover:text-white transition-all"
+                        className="px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/30 border-2 border-rose-500/20 hover:border-rose-500/50 text-rose-400 hover:text-rose-200 text-xs font-semibold transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-rose-400"
                       >
                         🗑️
                       </button>
