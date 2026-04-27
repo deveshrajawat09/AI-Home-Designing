@@ -3,14 +3,24 @@ import * as fabric from "fabric";
 import { drawGrid, initCanvas, renderPlan } from "../utils/drawPlan";
 
 export default function CanvasView({ plan, editable, land }) {
-  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const fabricRef = useRef(null);
 
   useEffect(() => {
-    const canvas = initCanvas(canvasRef.current, 900, 650);
+    if (!containerRef.current) return;
+    
+    // Create underlying canvas element
+    const canvasEl = document.createElement("canvas");
+    containerRef.current.appendChild(canvasEl);
+    
+    const canvas = initCanvas(canvasEl, 900, 650);
     fabricRef.current = canvas;
     drawGrid(canvas, 40);
-    return () => canvas.dispose();
+    
+    return () => {
+      canvas.dispose();
+      fabricRef.current = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -87,9 +97,9 @@ export default function CanvasView({ plan, editable, land }) {
           </span>
         </div>
       </div>
-      <canvas 
-        ref={canvasRef} 
-        className="w-full h-[650px] rounded-xl border-2 border-gray-200 dark:border-gray-600 shadow-inner bg-white dark:bg-gray-700" 
+      <div 
+        ref={containerRef} 
+        className="w-full h-[650px] rounded-xl border-2 border-gray-200 dark:border-gray-600 shadow-inner bg-white dark:bg-gray-700 overflow-hidden relative" 
       />
     </div>
   );

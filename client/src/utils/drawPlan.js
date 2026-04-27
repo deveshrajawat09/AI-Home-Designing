@@ -12,7 +12,8 @@ export const initCanvas = (canvasEl, width, height) => {
 };
 
 export const drawGrid = (canvas, unit = 40) => {
-  const { width, height } = canvas;
+  const width = canvas.getWidth();
+  const height = canvas.getHeight();
   const lines = [];
   for (let i = 0; i < width; i += unit) {
     lines.push(
@@ -30,18 +31,19 @@ export const drawGrid = (canvas, unit = 40) => {
       })
     );
   }
-  lines.forEach((l) => canvas.add(l));
+  if (lines.length > 0) {
+    canvas.add(...lines);
+  }
 };
 
 export const renderPlan = (canvas, plan, editable) => {
-  canvas.getObjects().forEach((o) => {
-    if (o._typeTag) canvas.remove(o);
-  });
+  const oldObjects = canvas.getObjects().filter((o) => o._typeTag);
+  oldObjects.forEach((o) => canvas.remove(o));
 
   const scale = plan.meta?.scale || 1;
   const toPx = (v) => v * 40 * scale;
 
-  plan.rooms.forEach((r) => {
+  plan.rooms?.forEach((r) => {
     const rect = new fabric.Rect({
       left: toPx(r.x),
       top: toPx(r.y),

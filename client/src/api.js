@@ -51,12 +51,7 @@ export const savePlan = async (body) => {
 
 export const deletePlan = async (id) => {
   const { data } = await api.delete(`/plans/${id}`);
-  return data;
-};
-
-export const deletePlan = async (id) => {
-  const { data } = await api.delete(`/plans/${id}`);
-  return data.ok;
+  return data.ok ?? data;
 };
 
 // ── Health Check ──────────────────────────────────────────────

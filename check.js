@@ -1,0 +1,1 @@
+fetch('https://generativelanguage.googleapis.com/v1beta/models?key=AIzaSyANyG1RxGxVvV1Ek6gILVVWlYOj3JsEA7I').then(r => r.json()).then(d => { if(d.models) console.log(d.models.map(m => m.name)); else console.log(d); })

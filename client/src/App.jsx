@@ -329,7 +329,6 @@ function PlannerView() {
                       onClick={loadSample}
                       disabled={loading}
                       className="inline-flex items-center justify-center py-2.5 rounded-xl border-2 border-slate-600 hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 text-slate-100 text-sm font-semibold hover:text-white shadow-md hover:shadow-lg disabled:opacity-60 transition-all active:scale-95 focus:ring-2 focus:ring-slate-400"
-                      disabled={loading}
                     >
                       Sample 10×15
                     </button>
