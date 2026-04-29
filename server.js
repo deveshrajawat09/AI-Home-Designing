@@ -429,6 +429,51 @@ app.delete(
   })
 )
 
+// ── AI Chat Assistant ──────────────────────────────────────────
+app.post(
+  "/api/chat",
+  authenticate,
+  asyncHandler(async (req, res) => {
+    const { message, history } = req.body;
+    
+    if (!message) {
+      throw new ValidationError("Message is required", [{ field: "message", message: "Cannot be empty" }]);
+    }
+
+    try {
+      if (genAI) {
+        // Construct the chat prompt
+        let prompt = "You are an expert AI Architect Assistant. Provide concise, helpful advice on home layout, design, ventilation, and budget optimization. Reply in Markdown format.\n\n";
+        
+        // Add minimal history context if available
+        if (history && Array.isArray(history)) {
+          const recentHistory = history.slice(-5); // Keep context small
+          recentHistory.forEach(msg => {
+            prompt += `${msg.role === 'user' ? 'User' : 'Architect'}: ${msg.content}\n`;
+          });
+        }
+        
+        prompt += `User: ${message}\nArchitect:`;
+
+        const model = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY).getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const reply = result.response.text().trim();
+        
+        res.json({ reply });
+      } else {
+        // Fallback if no API key
+        res.json({ 
+          reply: "I am currently in offline mode (no API key configured). Here are some general tips: 1. Ensure good cross-ventilation in living spaces. 2. Keep plumbing walls shared between kitchen and bathrooms to reduce costs. 3. Maximize natural light with south/east facing windows." 
+        });
+      }
+    } catch (err) {
+      console.error("[api-chat]", err.message);
+      ErrorLogger.logRequest(req, err);
+      res.json({ reply: "I'm sorry, I'm having trouble analyzing your request right now. Please try again." });
+    }
+  })
+);
+
 // ── Health Check ─────────────────────────────────────────────
 app.get("/api/health", (_req, res) => {
   res.json({

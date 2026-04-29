@@ -7,6 +7,7 @@ import CanvasView from "./components/CanvasView";
 import ThreePreview from "./components/ThreePreview";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import AiChat from "./components/AiChat";
 
 const defaultLand = { length: 10, width: 15, shape: "rectangle", pointsText: "" };
 
@@ -179,6 +180,12 @@ function PlannerView() {
                 {tab === "saved" ? `Saved (${saved.length})` : tab}
               </button>
             ))}
+            <button
+              onClick={() => navigate("/chat")}
+              className="px-4 py-1.5 rounded-full font-medium transition-all text-emerald-400 hover:bg-emerald-500/10"
+            >
+              ✨ AI Assistant
+            </button>
           </div>
 
           <div className="ml-auto flex items-center gap-3 text-xs md:text-sm">
@@ -319,8 +326,10 @@ function PlannerView() {
                   <div className="grid grid-cols-2 gap-2 pt-1">
                     <button
                       onClick={() => handleGenerate()}
-                      className="inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white text-sm font-semibold hover:from-indigo-600 hover:to-indigo-700 shadow-lg shadow-indigo-500/40 disabled:opacity-60 disabled:cursor-not-allowed transition-all active:scale-95 focus:ring-2 focus:ring-indigo-400"
+                      className="inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700 hover:from-indigo-700 hover:via-indigo-600 hover:to-indigo-800 text-white text-sm font-semibold disabled:from-gray-500 disabled:via-gray-600 disabled:to-gray-600 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-indigo-500/50 transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant"
                       disabled={loading}
+                      onMouseEnter={(e) => !loading && e.target.classList.add('btn-glow-indigo')}
+                      onMouseLeave={(e) => e.target.classList.remove('btn-glow-indigo')}
                     >
                       <span className={`inline-block h-2 w-2 rounded-full ${loading ? "bg-yellow-300 animate-ping" : "bg-emerald-300 animate-pulse"}`} />
                       {loading ? "Generating…" : "Generate"}
@@ -328,7 +337,7 @@ function PlannerView() {
                     <button
                       onClick={loadSample}
                       disabled={loading}
-                      className="inline-flex items-center justify-center py-2.5 rounded-xl border-2 border-slate-600 hover:border-slate-500 bg-slate-900/60 hover:bg-slate-800 text-slate-100 text-sm font-semibold hover:text-white shadow-md hover:shadow-lg disabled:opacity-60 transition-all active:scale-95 focus:ring-2 focus:ring-slate-400"
+                      className="inline-flex items-center justify-center py-2.5 rounded-xl border-2 border-slate-500 hover:border-indigo-500/60 bg-gradient-to-r from-slate-800/40 to-slate-700/40 hover:from-indigo-600/20 hover:to-indigo-500/20 text-slate-100 hover:text-indigo-300 text-sm font-semibold shadow-md hover:shadow-lg hover:shadow-indigo-500/30 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant"
                     >
                       Sample 10×15
                     </button>
@@ -373,7 +382,9 @@ function PlannerView() {
                   <button
                     onClick={handleSave}
                     disabled={!plan}
-                    className="px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white text-sm font-semibold disabled:from-gray-500 disabled:to-gray-600 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 hover:shadow-xl transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-emerald-400"
+                    className="px-6 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-700 hover:from-emerald-700 hover:via-emerald-600 hover:to-emerald-800 text-white text-sm font-semibold disabled:from-gray-500 disabled:via-gray-600 disabled:to-gray-600 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:shadow-emerald-500/50 transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant"
+                    onMouseEnter={(e) => !e.target.disabled && e.target.classList.add('btn-glow-emerald')}
+                    onMouseLeave={(e) => e.target.classList.remove('btn-glow-emerald')}
                   >
                     Save
                   </button>
@@ -410,7 +421,7 @@ function PlannerView() {
                 <p className="text-4xl mb-3">🏠</p>
                 <p className="text-slate-300 font-medium">No saved plans yet</p>
                 <p className="text-slate-500 text-sm mt-1">Generate and save a floor plan to see it here.</p>
-                <button onClick={() => setActiveTab("design")} className="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white text-sm font-semibold shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-indigo-400">
+                <button onClick={() => setActiveTab("design")} className="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700 hover:from-indigo-700 hover:via-indigo-600 hover:to-indigo-800 text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:shadow-indigo-500/50 transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant" onMouseEnter={(e) => e.target.classList.add('btn-glow-indigo')} onMouseLeave={(e) => e.target.classList.remove('btn-glow-indigo')}>
                   🚀 Start Designing
                 </button>
               </div>
@@ -445,13 +456,17 @@ function PlannerView() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleLoad(rec)}
-                        className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500/20 to-indigo-600/20 border-2 border-indigo-500/30 hover:border-indigo-500/60 text-indigo-300 hover:text-indigo-100 text-xs font-semibold hover:from-indigo-500/40 hover:to-indigo-600/40 transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-indigo-400"
+                        className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600/30 to-indigo-500/30 border-2 border-indigo-500/50 hover:border-indigo-400/80 text-indigo-200 hover:text-indigo-100 text-xs font-semibold hover:from-indigo-600/50 hover:to-indigo-500/50 shadow-lg hover:shadow-xl hover:shadow-indigo-500/20 transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant"
+                        onMouseEnter={(e) => e.target.classList.add('btn-glow-indigo')}
+                        onMouseLeave={(e) => e.target.classList.remove('btn-glow-indigo')}
                       >
                         📁 Load
                       </button>
                       <button
                         onClick={() => handleDelete(rec.id, rec.name)}
-                        className="px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/30 border-2 border-rose-500/20 hover:border-rose-500/50 text-rose-400 hover:text-rose-200 text-xs font-semibold transition-all duration-200 active:scale-95 focus:ring-2 focus:ring-rose-400"
+                        className="px-3 py-2.5 rounded-xl bg-rose-600/30 border-2 border-rose-500/50 hover:border-rose-400/80 text-rose-300 hover:text-rose-100 text-xs font-semibold shadow-lg hover:shadow-xl hover:shadow-rose-500/20 transition-all duration-300 active:scale-95 focus:ring-2 focus:ring-rose-400 focus:ring-offset-2 focus:ring-offset-slate-950 btn-elegant"
+                        onMouseEnter={(e) => e.target.classList.add('btn-glow-rose')}
+                        onMouseLeave={(e) => e.target.classList.remove('btn-glow-rose')}
                       >
                         🗑️
                       </button>
@@ -512,6 +527,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
       <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup />} />
+      <Route path="/chat" element={user ? <AiChat /> : <Navigate to="/login" replace />} />
       <Route path="/" element={user ? <PlannerView /> : <Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
     </Routes>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // ── Axios Instance with Auth Interceptor ─────────────────────
-const api = axios.create({ baseURL: "" });
+const api = axios.create({ baseURL: "http://localhost:5001" });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -23,12 +23,12 @@ api.interceptors.response.use(
 
 // ── Auth ─────────────────────────────────────────────────────
 export const login = async (email, password) => {
-  const { data } = await api.post("/api/login", { email, password });
+  const { data } = await api.post("/api/auth/login", { email, password });
   return data;
 };
 
-export const signup = async (email, password) => {
-  const { data } = await api.post("/api/signup", { email, password });
+export const signup = async (email, password, name) => {
+  const { data } = await api.post("/api/auth/signup", { email, password, name });
   return data;
 };
 
@@ -59,3 +59,10 @@ export const checkHealth = async () => {
   const { data } = await api.get("/api/health");
   return data;
 };
+
+// ── Chat Assistant ─────────────────────────────────────────────
+export const sendChatMessage = async (message, history = []) => {
+  const { data } = await api.post("/api/chat", { message, history });
+  return data;
+};
+

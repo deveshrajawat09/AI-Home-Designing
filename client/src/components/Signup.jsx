@@ -5,144 +5,249 @@ import { usePlanStore } from "../store";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const { setUser, setToken } = usePlanStore();
 
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  /* =======================================
+     HANDLE INPUT
+  ======================================= */
+  const updateField = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setError("");
+  };
+
+  /* =======================================
+     PASSWORD STRENGTH
+  ======================================= */
+  const getStrength = () => {
+    const pass = form.password;
+    let score = 0;
+
+    if (pass.length >= 8) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+    if (score <= 1) return { text: "Weak", color: "bg-rose-500", w: "25%" };
+    if (score === 2) return { text: "Medium", color: "bg-amber-500", w: "55%" };
+    if (score === 3) return { text: "Strong", color: "bg-emerald-500", w: "78%" };
+    return { text: "Very Strong", color: "bg-cyan-500", w: "100%" };
+  };
+
+  const strength = getStrength();
+
+  /* =======================================
+     SUBMIT
+  ======================================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+    if (!form.name.trim()) {
+      return setError("Full name is required");
     }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
+    if (form.password.length < 8) {
+      return setError("Password must be at least 8 characters");
     }
 
-    setLoading(true);
+    if (form.password !== form.confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
     try {
-      const data = await signup(email, password);
+      setLoading(true);
+
+      const data = await signup(form.email, form.password, form.name);
+
       localStorage.setItem("token", data.token);
       setUser(data.user);
       setToken(data.token);
-      navigate("/", { replace: true });
+
+      setSuccess("Account created successfully 🚀");
+
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 1000);
     } catch (err) {
-      setError(err.response?.data?.error || err.message || "An error occurred");
+      setError(
+        err?.response?.data?.detail ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "Signup failed. Try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-emerald-50 dark:from-gray-950 dark:via-gray-900 dark:to-emerald-950 px-4 py-8">
-      <div className="max-w-md w-full space-y-8 p-8 md:p-10 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/60 dark:border-gray-600/40 transition-all">
-        <div className="text-center space-y-3">
-          <div className="flex justify-center">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-600/30">
-              <span className="text-xl font-bold text-white">🏗️</span>
-            </div>
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,.18),transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(99,102,241,.18),transparent_35%),linear-gradient(135deg,#020617,#0f172a,#111827)]">
+
+      <div className="w-full max-w-md card-glass p-8 md:p-10 shadow-premium">
+
+        {/* HEADER */}
+        <div className="text-center mb-8">
+          <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-2xl shadow-xl floaty">
+            🏠
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">HomePlanner AI</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Create your account to start designing</p>
+
+          <h1 className="mt-5 text-3xl font-extrabold text-white">
+            Create Account
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-300">
+            Join HomePlanner AI and design smarter spaces
+          </p>
         </div>
 
-        <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                📧 Email Address
-              </label>
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+
+          {/* NAME */}
+          <div>
+            <label className="block text-sm text-slate-300 mb-2">
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="Devesh Sharma"
+              value={form.name}
+              onChange={(e) => updateField("name", e.target.value)}
+            />
+          </div>
+
+          {/* EMAIL */}
+          <div>
+            <label className="block text-sm text-slate-300 mb-2">
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={(e) => updateField("email", e.target.value)}
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div>
+            <label className="block text-sm text-slate-300 mb-2">
+              Password
+            </label>
+
+            <div className="relative">
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:ring-emerald-400 focus:bg-white dark:focus:bg-gray-800 sm:text-sm font-medium"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type={showPass ? "text" : "password"}
+                placeholder="Create password"
+                value={form.password}
+                onChange={(e) => updateField("password", e.target.value)}
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-300 bg-transparent p-0"
+              >
+                {showPass ? "🙈" : "👁️"}
+              </button>
             </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                🔑 Password
-              </label>
+
+            {/* strength */}
+            {form.password && (
+              <div className="mt-3">
+                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className={`h-full ${strength.color}`}
+                    style={{ width: strength.w }}
+                  />
+                </div>
+                <p className="text-xs text-slate-300 mt-1">
+                  Strength: {strength.text}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* CONFIRM */}
+          <div>
+            <label className="block text-sm text-slate-300 mb-2">
+              Confirm Password
+            </label>
+
+            <div className="relative">
               <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:ring-emerald-400 focus:bg-white dark:focus:bg-gray-800 sm:text-sm font-medium"
-                placeholder="At least 8 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 ml-1">💡 Use uppercase, numbers, and symbols for security</p>
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                ✓ Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:focus:ring-emerald-400 focus:bg-white dark:focus:bg-gray-800 sm:text-sm font-medium"
+                type={showConfirm ? "text" : "password"}
                 placeholder="Repeat password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={form.confirmPassword}
+                onChange={(e) =>
+                  updateField("confirmPassword", e.target.value)
+                }
               />
+
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-300 bg-transparent p-0"
+              >
+                {showConfirm ? "🙈" : "👁️"}
+              </button>
             </div>
           </div>
 
+          {/* ERROR */}
           {error && (
-            <div className="rounded-lg bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-sm px-4 py-3 text-center font-medium animate-error-pulse">
+            <div className="toast-modern border border-rose-500/30 text-rose-200">
               ⚠️ {error}
             </div>
           )}
 
+          {/* SUCCESS */}
+          {success && (
+            <div className="toast-modern border border-emerald-500/30 text-emerald-200">
+              ✅ {success}
+            </div>
+          )}
+
+          {/* SUBMIT */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 disabled:from-gray-400 disabled:to-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl disabled:shadow-md"
+            className="w-full btn-success py-3 text-white font-bold rounded-2xl"
           >
             {loading ? (
-              <>
-                <span className="animate-spin">⏳</span>
-                <span>Creating account…</span>
-              </>
+              <span className="flex justify-center items-center gap-2">
+                <span className="loader-ring"></span>
+                Creating...
+              </span>
             ) : (
-              <>
-                <span>🚀</span>
-                <span>Create account</span>
-              </>
+              "🚀 Create Account"
             )}
           </button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">or</span>
-            </div>
-          </div>
-
-          <p className="text-center text-sm text-gray-700 dark:text-gray-300">
+          {/* LOGIN */}
+          <p className="text-center text-sm text-slate-300 pt-2">
             Already have an account?{" "}
-            <Link to="/login" className="font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors underline underline-offset-2">
-              Sign in
+            <Link
+              to="/login"
+              className="text-emerald-400 hover:text-emerald-300 font-semibold"
+            >
+              Sign In
             </Link>
           </p>
         </form>
