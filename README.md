@@ -67,4 +67,5 @@ To run the application exactly how it operates in production (serving both the R
     ```bash
     node server.js
     ```
-*The full application will now be running at http://localhost:8000*
+*The full application will now be running at http://localhost:5173/*
+
