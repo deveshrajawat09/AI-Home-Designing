@@ -115,7 +115,16 @@ const sampleProjects: Project[] = [
 const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>(defaultUser);
+  const [user, setUser] = useState<User>(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return { ...defaultUser, ...parsed, avatar: parsed.name ? parsed.name.substring(0, 2).toUpperCase() : defaultUser.avatar };
+      } catch (e) {}
+    }
+    return defaultUser;
+  });
   const [projects, setProjects] = useState<Project[]>(sampleProjects);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
@@ -153,7 +162,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [updateProject]);
 
   const updateUser = useCallback((data: Partial<User>) => {
-    setUser(prev => ({ ...prev, ...data }));
+    setUser(prev => {
+      const newUser = { ...prev, ...data };
+      if (data.name) {
+        newUser.avatar = data.name.substring(0, 2).toUpperCase();
+      }
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return newUser;
+    });
   }, []);
 
   return (

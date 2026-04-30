@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import {
   Home, LayoutDashboard, Grid3X3, Paintbrush, Building2, User,
-  Moon, Sun, Bell, Search, Plus, ChevronDown, Sparkles, Menu, X
+  Moon, Sun, Bell, Search, Plus, ChevronDown, Sparkles, Menu, X, LogOut
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useApp } from '../../context/AppContext';
@@ -145,6 +145,19 @@ export function Navbar() {
                         {label}
                       </button>
                     ))}
+                    <div className={`border-t mt-1 pt-1 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem('token');
+                          setShowUserMenu(false);
+                          navigate('/login');
+                        }}
+                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors text-red-500 hover:bg-red-500/10`}
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

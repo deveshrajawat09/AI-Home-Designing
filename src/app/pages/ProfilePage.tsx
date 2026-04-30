@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import {
   User, Mail, Calendar, Star, Edit3, Save, Shield, Bell,
   Moon, Sun, Grid3X3, Layers, Download, Share2, Zap, Crown,
-  Check, Camera, Lock, Cpu, Paintbrush
+  Check, Camera, Lock, Cpu, Paintbrush, LogOut
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useApp } from '../context/AppContext';
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
   const { user, projects, updateUser } = useApp();
   const [editing, setEditing] = useState(false);
@@ -307,6 +309,26 @@ export default function ProfilePage() {
                     </button>
                   </div>
                 ))}
+                <div className={`flex items-center justify-between p-3 rounded-xl border border-red-500/20 ${isDark ? 'bg-red-500/5' : 'bg-red-50'}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg ${isDark ? 'bg-red-500/10' : 'bg-red-100'} flex items-center justify-center`}>
+                      <LogOut className="w-4 h-4 text-red-500" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-red-500">Sign Out</div>
+                      <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Log out of this device</div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      localStorage.removeItem('token');
+                      navigate('/login');
+                    }}
+                    className="px-3 py-1.5 rounded-lg text-xs bg-red-500 hover:bg-red-600 text-white transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
               </div>
             </div>
 

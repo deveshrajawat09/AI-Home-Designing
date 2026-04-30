@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,14 +17,28 @@ const JWT_SECRET = 'your-super-secret-jwt-key';
 app.use(cors());
 app.use(express.json());
 
-// In-memory database (For demo purposes)
-const users = [];
+// File-based database
+const USERS_FILE = path.join(__dirname, 'users.json');
+
+const getUsers = () => {
+  try {
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+};
+
+const saveUsers = (users) => {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+};
 
 // API Routes
 app.post('/api/auth/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
     
+    const users = getUsers();
     if (users.find(u => u.email === email)) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -31,6 +46,7 @@ app.post('/api/auth/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = { id: Date.now().toString(), name, email, password: hashedPassword };
     users.push(newUser);
+    saveUsers(users);
 
     const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '1d' });
     res.status(201).json({ message: 'User created', token, user: { name, email } });
@@ -43,6 +59,7 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    const users = getUsers();
     const user = users.find(u => u.email === email);
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
