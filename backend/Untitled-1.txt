@@ -1,3 +1,0 @@
-# 
-
-{"status":"ok","db":"connected","ai_configured":false}
